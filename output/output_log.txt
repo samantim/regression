@@ -1,0 +1,357 @@
+#################### First 5 rows of original data #######################
+   age     sex     bmi  children smoker     region      charges
+0   19  female  27.900         0    yes  southwest  16884.92400
+1   18    male  33.770         1     no  southeast   1725.55230
+2   28    male  33.000         3     no  southeast   4449.46200
+3   33    male  22.705         0     no  northwest  21984.47061
+4   32    male  28.880         0     no  northwest   3866.85520
+
+#################### Describe original data specifications ###############
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1338 entries, 0 to 1337
+Data columns (total 7 columns):
+ #   Column    Non-Null Count  Dtype  
+---  ------    --------------  -----  
+ 0   age       1338 non-null   int64  
+ 1   sex       1338 non-null   object 
+ 2   bmi       1338 non-null   float64
+ 3   children  1338 non-null   int64  
+ 4   smoker    1338 non-null   object 
+ 5   region    1338 non-null   object 
+ 6   charges   1338 non-null   float64
+dtypes: float64(2), int64(2), object(3)
+memory usage: 73.3+ KB
+
+                age          bmi     children       charges
+count   1338.000000  1338.000000  1338.000000   1338.000000
+mean      39.207025    30.663397     1.094918  13270.422265
+std       14.049960     6.098187     1.205493  12110.011237
+min       18.000000    15.960000     0.000000   1121.873900
+25%       27.000000    26.296250     0.000000   4740.287150
+50%       39.000000    30.400000     1.000000   9382.033000
+75%       51.000000    34.693750     2.000000  16639.912515
+max       64.000000    53.130000     5.000000  63770.428010
+median    39.000000    30.400000     1.000000   9382.033000
+mode      18.000000    32.300000     0.000000   1639.563100
+
+Modes of categorical variables are:
+    sex smoker     region
+0  male     no  southeast
+
+sex   
+male      676
+female    662
+Name: count, dtype: int64
+
+smoker
+no        1064
+yes        274
+Name: count, dtype: int64
+
+region   
+southeast    364
+northwest    325
+southwest    325
+northeast    324
+Name: count, dtype: int64
+##########################################################################
+
+##################### output/data_exploration_before_data_cleaning.png file saved ###################
+
+##################### output/input_description_before_data_cleaning.png file saved ###################
+
+##################### output/regression_lines.png file saved ###################
+
+#################### Data cleaning and dataset changes ###################
+Dataset has these missing values:
+age         0
+sex         0
+bmi         0
+children    0
+smoker      0
+region      0
+charges     0
+dtype: int64
+
+Missing values are replaced by next valid value of that column using bfill method.
+
+Duplicate rows are:
+     age   sex    bmi  children smoker     region    charges
+581   19  male  30.59         0     no  northwest  1639.5631
+Duplicate rows count: 1
+After removing duplicate rows the dataset has 1337 rows.
+
+##################### input_outliers.png file saved ######################
+
+Outliers based on IQR method and skewness before handling them:
+
+Outliers of Column age count: 0  ---  skewness: 0.054780773126998195
+Outliers of Column bmi count: 9  ---  skewness: 0.28391419385321137
+Outliers of Column children count: 0  ---  skewness: 0.9374206440474123
+
+Outliers based on IQR method and skewness after handling them:
+
+Outliers of Column age count: 0  ---  skewness: 0.054780773126998195
+Outliers of Column bmi count: 0  ---  skewness: 0.15167131342427534
+Outliers of Column children count: 0  ---  skewness: 0.9374206440474123
+
+Below columns need encoding:
+Values for sex are ['female' 'male']
+Values for smoker are ['no' 'yes']
+Values for region are ['northeast' 'northwest' 'southeast' 'southwest']
+
+#################### Describe cleaned (except scaling step) data specifications ###############
+<class 'pandas.core.frame.DataFrame'>
+Index: 1337 entries, 0 to 1337
+Data columns (total 7 columns):
+ #   Column    Non-Null Count  Dtype  
+---  ------    --------------  -----  
+ 0   age       1337 non-null   int64  
+ 1   sex       1337 non-null   int64  
+ 2   bmi       1337 non-null   float64
+ 3   children  1337 non-null   int64  
+ 4   smoker    1337 non-null   int64  
+ 5   region    1337 non-null   int64  
+ 6   charges   1337 non-null   float64
+dtypes: float64(2), int64(5)
+memory usage: 115.9 KB
+
+                age          sex          bmi     children       smoker       region       charges
+count   1337.000000  1337.000000  1337.000000  1337.000000  1337.000000  1337.000000   1337.000000
+mean      39.222139     0.504862    30.549174     1.095737     0.204936     1.516081  13279.121487
+std       14.044333     0.500163     5.903956     1.205571     0.403806     1.105208  12110.359656
+min       18.000000     0.000000    15.960000     0.000000     0.000000     0.000000   1121.873900
+25%       27.000000     0.000000    26.290000     0.000000     0.000000     1.000000   4746.344000
+50%       39.000000     1.000000    30.400000     1.000000     0.000000     2.000000   9386.161300
+75%       51.000000     1.000000    34.430000     2.000000     0.000000     2.000000  16657.717450
+max       64.000000     1.000000    46.750000     5.000000     1.000000     3.000000  63770.428010
+median    39.000000     1.000000    30.400000     1.000000     0.000000     2.000000   9386.161300
+mode      18.000000     1.000000    32.300000     0.000000     0.000000     2.000000   1121.873900
+##########################################################################
+
+correlations of features:
+               age       sex       bmi  children    smoker    region   charges
+age       1.000000 -0.019814  0.114410  0.041536 -0.025587  0.001626  0.298308
+sex      -0.019814  1.000000  0.040471  0.017848  0.076596  0.004936  0.058044
+bmi       0.114410  0.040471  1.000000  0.016992 -0.002213  0.156201  0.192190
+children  0.041536  0.017848  0.016992  1.000000  0.007331  0.016258  0.067389
+smoker   -0.025587  0.076596 -0.002213  0.007331  1.000000 -0.002358  0.787234
+region    0.001626  0.004936  0.156201  0.016258 -0.002358  1.000000 -0.006547
+charges   0.298308  0.058044  0.192190  0.067389  0.787234 -0.006547  1.000000
+##################### output/correlations.png file saved ###################
+
+##################### output/data_exploration_after_data_cleaning.png file saved ###################
+
+##################### output/input_description_after_data_cleaning.png file saved ###################
+
+
+After encoding and Scaling dataset is:
+           age  sex       bmi  children  smoker    region      charges
+0     0.021739  0.0  0.387788       0.0     1.0  1.000000  16884.92400
+1     0.000000  1.0  0.578435       0.2     0.0  0.666667   1725.55230
+2     0.217391  1.0  0.553426       0.6     0.0  0.666667   4449.46200
+3     0.326087  1.0  0.219065       0.0     0.0  0.333333  21984.47061
+4     0.304348  1.0  0.419617       0.0     0.0  0.333333   3866.85520
+...        ...  ...       ...       ...     ...       ...          ...
+1333  0.695652  1.0  0.487496       0.6     0.0  0.333333  10600.54830
+1334  0.000000  0.0  0.518350       0.0     0.0  0.000000   2205.98080
+1335  0.000000  0.0  0.678467       0.0     0.0  0.666667   1629.83350
+1336  0.065217  0.0  0.319584       0.0     0.0  1.000000   2007.94500
+1337  0.934783  0.0  0.425788       0.0     1.0  0.333333  29141.36030
+
+[1337 rows x 7 columns]
+#################### Modeling via linear regression ###################
+################ regression by linear regression (Before Optimization) #################
+
+################ Evaluating the model(Before Optimization) #################
+mean absolute error: 4227.749967449583
+
+mean squared error: 36628649.94480347
+
+r2_score: 0.8006669867688775
+
+Coefficients:
+          coefficients
+region     -709.777289
+sex         -44.035384
+children   2624.688205
+bmi       10049.367047
+age       11381.701265
+smoker    23047.195429
+##################### output/linearregression_model/before_optimization/coefficients_Before Optimization.png file saved ###################
+
+############ Hyperparameter tuning to optimized model parameters ############
+
+Best Parameters: {'copy_X': True, 'fit_intercept': True, 'n_jobs': 1, 'positive': False}
+Best Score: 0.7236807457496799
+################ regression by linear regression (After Optimization) #################
+
+################ Evaluating the model(After Optimization) #################
+mean absolute error: 4227.749967449583
+
+mean squared error: 36628649.94480347
+
+r2_score: 0.8006669867688775
+
+Coefficients:
+          coefficients
+region     -709.777289
+sex         -44.035384
+children   2624.688205
+bmi       10049.367047
+age       11381.701265
+smoker    23047.195429
+##################### output/linearregression_model/after_optimization/coefficients_After Optimization.png file saved ###################
+
+#################### Modeling via ridge regression ###################
+################ regression by ridge regression (Before Optimization) #################
+
+################ Evaluating the model(Before Optimization) #################
+mean absolute error: 4233.810829412121
+
+mean squared error: 36886783.74394853
+
+r2_score: 0.7992622233370306
+
+Coefficients:
+          coefficients
+region     -685.719609
+sex         -33.501647
+children   2595.848192
+bmi        9803.997410
+age       11282.375029
+smoker    22907.315692
+##################### output/ridgeregression_model/before_optimization/coefficients_Before Optimization.png file saved ###################
+
+############ Hyperparameter tuning to optimized model parameters ############
+
+Best Parameters: {'alpha': 1, 'copy_X': True, 'fit_intercept': True, 'positive': False, 'random_state': 20, 'solver': 'saga'}
+Best Score: 0.7237819353320089
+################ regression by ridge regression (After Optimization) #################
+
+################ Evaluating the model(After Optimization) #################
+mean absolute error: 4233.815506925789
+
+mean squared error: 36886750.77212607
+
+r2_score: 0.7992624027695985
+
+Coefficients:
+          coefficients
+region     -685.409170
+sex         -33.774716
+children   2595.663803
+bmi        9804.195825
+age       11282.523949
+smoker    22907.345580
+##################### output/ridgeregression_model/after_optimization/coefficients_After Optimization.png file saved ###################
+
+#################### Modeling via decision tree ###################
+################ regression by decision tree  (Before Optimization) #################
+
+################ Evaluating the model(Before Optimization) #################
+mean absolute error: 2987.666131152985
+
+mean squared error: 41940086.3730915
+
+r2_score: 0.7717621641933348
+
+Importance of features:
+          feature_importances
+sex                  0.009152
+children             0.017449
+region               0.024381
+age                  0.131436
+bmi                  0.218303
+smoker               0.599279
+##################### output/decisiontree_model/before_optimization/feature_importances_Before Optimization.png file saved ###################
+
+############ Hyperparameter tuning to optimized model parameters ############
+
+Best Parameters: {'max_depth': 100, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 4, 'random_state': None}
+Best Score: 0.7574364849761099
+################ regression by decision tree  (After Optimization) #################
+
+################ Evaluating the model(After Optimization) #################
+mean absolute error: 4284.730985463708
+
+mean squared error: 62464647.04896047
+
+r2_score: 0.6600675608997075
+
+Importance of features:
+          feature_importances
+sex                  0.002197
+region               0.016007
+children             0.021122
+bmi                  0.129865
+age                  0.154819
+smoker               0.675989
+##################### output/decisiontree_model/after_optimization/feature_importances_After Optimization.png file saved ###################
+
+#################### Modeling via random forest ###################
+################ regression by random forest (Before Optimization) #################
+
+################ Evaluating the model(Before Optimization) #################
+mean absolute error: 2580.0481151201493
+
+mean squared error: 21567348.33224816
+
+r2_score: 0.8826305491206845
+
+Importance of features:
+          feature_importances
+sex                  0.006474
+region               0.016146
+children             0.023501
+age                  0.137332
+bmi                  0.215642
+smoker               0.600905
+##################### output/randomforest_model/before_optimization/feature_importances_Before Optimization.png file saved ###################
+
+############ Hyperparameter tuning to optimized model parameters ############
+
+Best Parameters: {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 2, 'min_samples_split': 3, 'random_state': None}
+Best Score: 0.8327280665303212
+################ regression by random forest (After Optimization) #################
+
+################ Evaluating the model(After Optimization) #################
+mean absolute error: 2817.582683757362
+
+mean squared error: 21771049.717713762
+
+r2_score: 0.8815220067358192
+
+Importance of features:
+          feature_importances
+sex                  0.009645
+region               0.019719
+children             0.025232
+age                  0.144234
+bmi                  0.156858
+smoker               0.644311
+##################### output/randomforest_model/after_optimization/feature_importances_After Optimization.png file saved ###################
+
+#################### Modeling via xgboost regression ###################
+################ regression by linear xgboost (Before Optimization) #################
+
+################ Evaluating the model(Before Optimization) #################
+mean absolute error: 2870.6682332604655
+
+mean squared error: 24969317.67894786
+
+r2_score: 0.8641170412021715
+
+############ Hyperparameter tuning to optimized model parameters ############
+
+Best Parameters: {'gamma': 0, 'learning_rate': 0.03, 'max_depth': 3, 'min_child_weight': 10, 'reg_alpha': 0, 'reg_lambda': 0, 'subsample': 0.5}
+Best Score: 0.8467373842411163
+################ regression by linear xgboost (After Optimization) #################
+
+################ Evaluating the model(After Optimization) #################
+mean absolute error: 2613.1634572248718
+
+mean squared error: 18921059.855536677
+
+r2_score: 0.8970316438030326
+
